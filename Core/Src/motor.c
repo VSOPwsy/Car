@@ -10,6 +10,50 @@ uint32_t Motor_LeftRear_Speed_Previouse   = 0;
 uint32_t Motor_RightFront_Speed_Previouse = 0;
 uint32_t Motor_RightRear_Speed_Previouse  = 0;
 
+void Motor_Output(float speed)
+{
+
+    if (speed>0)
+    {       
+            __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, speed);
+			__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, speed);
+			__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_3, speed);
+			__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, speed);
+
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
+
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET);
+
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_RESET);
+
+            HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_RESET);
+    }
+    else
+    {       
+            __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, -speed);
+			__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, -speed);
+            __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_3, -speed);
+			__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, -speed);
+
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
+
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_SET);
+
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET);
+
+            HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_SET);
+    }
+    }
+}
+
 
 void Motor_Init(void)
 {
@@ -23,6 +67,7 @@ void Motor_Init(void)
     HAL_TIM_Encoder_Start(&htim5,TIM_CHANNEL_ALL);
     HAL_TIM_Encoder_Start(&htim8,TIM_CHANNEL_ALL);
 }
+
 
 
 // 输入与前进方向形成的角度(°)、速度（m/s），解算麦克纳姆轮的PWM占空比, 轮径为WHEEL_DIAMETER，把速度写入名称如Motor_LeftFront_Speed的变量
@@ -46,8 +91,8 @@ void Motor_CalculateSpeed(uint32_t angle, float speed)
     if (Motor_LeftFront_Speed < 10)
         Motor_LeftFront_Speed = 0;
     if (Motor_LeftRear_Speed < 10)
-        Motor_LeftRear_Speed = 0;
-    if (Motor_RightFront_Speed < 10)
+        Motor_LeftRear_Sp
+    if (Motor_RightFront_Speed < 10)eed = 0;
         Motor_RightFront_Speed = 0;
     if (Motor_RightRear_Speed < 10)
         Motor_RightRear_Speed = 0;

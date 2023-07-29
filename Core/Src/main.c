@@ -51,7 +51,7 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
+void Motor_Output(float speed);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -75,7 +75,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  
+
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -97,11 +97,12 @@ int main(void)
   /* USER CODE BEGIN 2 */
   Motor_Init();
   /* USER CODE END 2 */
-//初始化TIM2的四个通道输出PWM
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    Motor_Output(1000);
 
     /* USER CODE END WHILE */
 

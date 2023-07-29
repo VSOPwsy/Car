@@ -6,7 +6,7 @@
 
 
 void Motor_Init(void);
-
+void Motor_Output(float speed);
 
 
 
