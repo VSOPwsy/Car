@@ -52,4 +52,3 @@ void Motor_CalculateSpeed(uint32_t angle, float speed)
     if (Motor_RightRear_Speed < 10)
         Motor_RightRear_Speed = 0;
 }
-//对于上面的代码，如果传入angle = 90， speed=500， 四个轮子速度分别等于多少？答案是：
