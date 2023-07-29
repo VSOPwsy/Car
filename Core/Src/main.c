@@ -102,9 +102,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
-    __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 50000);
+    Move_X = 100;
+		// HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
+    // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
+    // __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 50000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -157,6 +158,7 @@ HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 10ms
   if (htim->Instance == PERIOD_INTERRUPT_TIM)
   {
     Measure_Motor_Speed();
+    Solve_Speed(Move_X, Move_Y, Move_Z);
     Update_Motor_PID();
     Set_PWM();
   }

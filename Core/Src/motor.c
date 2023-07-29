@@ -22,6 +22,10 @@ void Motor_Init(void)
     PID_Init(&PID_Motor_RightFront, MOTOR_PID_KP, 0, MOTOR_PID_KD);
     PID_Init(&PID_Motor_LeftRear,   MOTOR_PID_KP, 0, MOTOR_PID_KD);
     PID_Init(&PID_Motor_RightRear,  MOTOR_PID_KP, 0, MOTOR_PID_KD);
+
+    Move_X = 0;
+    Move_Y = 0;
+    Move_Z = 0;
 }
 
 void Smoothing(float Vx, float Vy, float Vz)

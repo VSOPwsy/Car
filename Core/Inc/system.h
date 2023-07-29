@@ -3,7 +3,9 @@
 
 #include "gpio.h"
 #include "tim.h"
-
+#include "usart.h"
+#include "pid.h"
+#include "motor.h"
 
 #define SMOOTH_CONTROL      1
 
