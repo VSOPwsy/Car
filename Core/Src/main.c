@@ -97,7 +97,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   Motor_Init();
   /* USER CODE END 2 */
-//初始化TIM2的四个通道输出PWM
+  
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)

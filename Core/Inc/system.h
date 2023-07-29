@@ -47,7 +47,6 @@ typedef struct
 	float Kp;
 	float Ki;
 }Motor_Parameter;
-
 extern Motor_Parameter Motor_LeftFront, Motor_LeftRear, Motor_RightFront, Motor_RightRear;
 
 
@@ -57,7 +56,9 @@ typedef struct
 	float VY;
 	float VZ;
 }Smooth_Control;
+extern Smooth_Control smooth_control;
 
-
+float target_limit_float(float, float, float);
+int target_limit_int(int, int, int);
 
 #endif

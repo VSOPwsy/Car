@@ -4,5 +4,5 @@
 #include "system.h"
 
 void Motor_Init(void);
-
+void Smooth_Control(float Vx, float Vy, float Vz);
 #endif
