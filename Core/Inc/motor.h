@@ -1,7 +1,6 @@
 #ifndef __MOTOR_H
 #define __MOTOR_H
 
-#include "system.h"
 #include "pid.h"
 
 extern PID PID_Motor_LeftFront;

@@ -86,14 +86,30 @@ void Solve_Speed(float Vx, float Vy, float Vz)
 
 void Set_PWM()
 {
-    __HAL_TIM_SET_COMPARE(&LEFTFRONT_MOTOR_PWM,  LEFTFRONT_MOTOR_PWM_CHANNEL,  Motor_LeftFront.Motor_PWM);
-    __HAL_TIM_SET_COMPARE(&RIGHTFRONT_MOTOR_PWM, RIGHTFRONT_MOTOR_PWM_CHANNEL, Motor_RightFront.Motor_PWM);
-    __HAL_TIM_SET_COMPARE(&LEFTREAR_MOTOR_PWM,   LEFTREAR_MOTOR_PWM_CHANNEL,   Motor_LeftRear.Motor_PWM);
-    __HAL_TIM_SET_COMPARE(&RIGHTREAR_MOTOR_PWM,  RIGHTREAR_MOTOR_PWM_CHANNEL,  Motor_RightRear.Motor_PWM);
+    __HAL_TIM_SET_COMPARE(&LEFTFRONT_MOTOR_PWM,  LEFTFRONT_MOTOR_PWM_CHANNEL,  float_abs(Motor_LeftFront.Motor_PWM));
+    HAL_GPIO_WritePin(LEFTFRONT_MOTOR_IN1_GPIO_PORT, LEFTFRONT_MOTOR_IN1_GPIO_PIN, Motor_LeftFront.Motor_PWM>0?GPIO_PIN_SET:GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(LEFTFRONT_MOTOR_IN2_GPIO_PORT, LEFTFRONT_MOTOR_IN2_GPIO_PIN, Motor_LeftFront.Motor_PWM<0?GPIO_PIN_SET:GPIO_PIN_RESET);
+
+    __HAL_TIM_SET_COMPARE(&RIGHTFRONT_MOTOR_PWM,  RIGHTFRONT_MOTOR_PWM_CHANNEL,  float_abs(Motor_RightFront.Motor_PWM));
+    HAL_GPIO_WritePin(RIGHTFRONT_MOTOR_IN1_GPIO_PORT, RIGHTFRONT_MOTOR_IN1_GPIO_PIN, Motor_RightFront.Motor_PWM>0?GPIO_PIN_SET:GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(RIGHTFRONT_MOTOR_IN2_GPIO_PORT, RIGHTFRONT_MOTOR_IN2_GPIO_PIN, Motor_RightFront.Motor_PWM<0?GPIO_PIN_SET:GPIO_PIN_RESET);
+
+    __HAL_TIM_SET_COMPARE(&LEFTREAR_MOTOR_PWM,  LEFTREAR_MOTOR_PWM_CHANNEL,  float_abs(Motor_LeftRear.Motor_PWM));
+    HAL_GPIO_WritePin(LEFTREAR_MOTOR_IN1_GPIO_PORT, LEFTREAR_MOTOR_IN1_GPIO_PIN, Motor_LeftRear.Motor_PWM>0?GPIO_PIN_SET:GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(LEFTREAR_MOTOR_IN2_GPIO_PORT, LEFTREAR_MOTOR_IN2_GPIO_PIN, Motor_LeftRear.Motor_PWM<0?GPIO_PIN_SET:GPIO_PIN_RESET);
+
+    __HAL_TIM_SET_COMPARE(&RIGHTREAR_MOTOR_PWM,  RIGHTREAR_MOTOR_PWM_CHANNEL,  float_abs(Motor_RightRear.Motor_PWM));
+    HAL_GPIO_WritePin(RIGHTREAR_MOTOR_IN1_GPIO_PORT, RIGHTREAR_MOTOR_IN1_GPIO_PIN, Motor_RightRear.Motor_PWM>0?GPIO_PIN_SET:GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(RIGHTREAR_MOTOR_IN2_GPIO_PORT, RIGHTREAR_MOTOR_IN2_GPIO_PIN, Motor_RightRear.Motor_PWM<0?GPIO_PIN_SET:GPIO_PIN_RESET);
 }
 
 void Update_Motor_PID()
 {
+    PID_Motor_LeftFront.target  = Motor_LeftFront.Target;
+    PID_Motor_RightFront.target = Motor_RightFront.Target;
+    PID_Motor_LeftRear.target   = Motor_LeftRear.Target;
+    PID_Motor_RightRear.target  = Motor_RightRear.Target;
+
     Update_PID_DerivKnown(&PID_Motor_LeftFront,  Motor_LeftFront.Encoder,  0, &(Motor_LeftFront.Motor_PWM));
     Update_PID_DerivKnown(&PID_Motor_RightFront, Motor_RightFront.Encoder, 0, &(Motor_RightFront.Motor_PWM));
     Update_PID_DerivKnown(&PID_Motor_LeftRear,   Motor_LeftRear.Encoder,   0, &(Motor_LeftRear.Motor_PWM));

@@ -8,8 +8,8 @@
 
 #define SMOOTH_CONTROL      1
 
-#define MOTOR_PID_KP        0.5f
-#define MOTOR_PID_KI        0.0f
+#define MOTOR_PID_KP        10000.0f
+#define MOTOR_PID_KI        20.0f
 #define MOTOR_PID_KD        0.0f
 
 #define MOTOR_SPEED_LIMIT   3.5f
