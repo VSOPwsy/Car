@@ -24,3 +24,11 @@ int target_limit_int(int insert, int low, int high)
     else
         return insert;	
 }
+
+float float_abs(float insert)
+{
+    if (insert < 0)
+        return -insert;
+    else
+        return insert;	
+}

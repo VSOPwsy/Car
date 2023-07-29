@@ -35,11 +35,16 @@
 #define ENCODER_MULTIPLES 4
 #define ENCODER_PRECISION ENCODER_MULTIPLES*364
 
+#include "gpio.h"
+#include "tim.h"
+#include "usart.h"
+
+
 
 extern uint32_t Move_X, Move_Y, Move_Z;
-extern float Kp=300,Ki=300; 
+extern float Kp, Ki; 
 
-typedef struct  
+typedef struct
 {
 	float Encoder;
 	float Motor_PWM;
@@ -50,7 +55,7 @@ typedef struct
 extern Motor_Parameter Motor_LeftFront, Motor_LeftRear, Motor_RightFront, Motor_RightRear;
 
 
-typedef struct  
+typedef struct
 {
 	float VX;
 	float VY;
@@ -60,5 +65,6 @@ extern Smooth_Control smooth_control;
 
 float target_limit_float(float, float, float);
 int target_limit_int(int, int, int);
+float float_abs(float);
 
 #endif
