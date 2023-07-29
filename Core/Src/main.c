@@ -152,7 +152,25 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 10ms
+{
+  if (htim->Instance == TIM1)
+  {
 
+
+    
+
+
+    Update_PID_DerivKnown(&PID_Motor_LeftFront, Motor_LeftFront.Encoder, 0, &(Motor_LeftFront.PWM));
+    Update_PID_DerivKnown(&PID_Motor_LeftRear, Motor_LeftRear.Encoder, 0, &(Motor_LeftRear.PWM));
+    Update_PID_DerivKnown(&PID_Motor_RightFront, Motor_RightFront.Encoder, 0, &(Motor_RightFront.PWM));
+    Update_PID_DerivKnown(&PID_Motor_RightRear, Motor_RightRear.Encoder, 0, &(Motor_RightRear.PWM));
+
+
+
+
+  }
+}
 /* USER CODE END 4 */
 
 /**
