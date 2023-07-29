@@ -157,9 +157,14 @@ HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 10ms
   if (htim->Instance == TIM1)
   {
 
+    Motor_LeftFront.Encoder  =  __HAL_TIM_GET_COUNTER(&LEFTFRONT_MOTOR_ENCODER_TIM) *100*WHEEL_DIAMETER/ENCODER_PRECISION;
+    Motor_LeftRear.Encoder   =  __HAL_TIM_GET_COUNTER(&LEFTREAR_MOTOR_ENCODER_TIM)  *100*WHEEL_DIAMETER/ENCODER_PRECISION;
+    Motor_RightFront.Encoder = __HAL_TIM_GET_COUNTER(&RIGHTFRONT_MOTOR_ENCODER_TIM) *100*WHEEL_DIAMETER/ENCODER_PRECISION;
+    Motor_RightRear.Encoder  =  __HAL_TIM_GET_COUNTER(&RIGHTREAR_MOTOR_ENCODER_TIM) *100*WHEEL_DIAMETER/ENCODER_PRECISION;
 
-    
 
+
+    //HAL库读取TIM1 Encoder的计数值
 
     Update_PID_DerivKnown(&PID_Motor_LeftFront, Motor_LeftFront.Encoder, 0, &(Motor_LeftFront.PWM));
     Update_PID_DerivKnown(&PID_Motor_LeftRear, Motor_LeftRear.Encoder, 0, &(Motor_LeftRear.PWM));
