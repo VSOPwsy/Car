@@ -104,9 +104,6 @@ int main(void)
   while (1)
   {
     Move_X = 100;
-		// HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
-    // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
-    // __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 50000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
