@@ -1,5 +1,11 @@
 #include "motor.h"
 
+
+PID PID_Motor_LeftFront;
+PID PID_Motor_RightFront;
+PID PID_Motor_LeftRear;
+PID PID_Motor_RightRear;
+
 void Motor_Init(void)
 {
     HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
@@ -11,6 +17,11 @@ void Motor_Init(void)
     HAL_TIM_Encoder_Start(&htim4,TIM_CHANNEL_ALL);
     HAL_TIM_Encoder_Start(&htim5,TIM_CHANNEL_ALL);
     HAL_TIM_Encoder_Start(&htim8,TIM_CHANNEL_ALL);
+
+    PID_Init(&PID_Motor_LeftFront, MOTOR_PID_KP, 0, MOTOR_PID_KD);
+    PID_Init(&PID_Motor_RightFront, MOTOR_PID_KP, 0, MOTOR_PID_KD);
+    PID_Init(&PID_Motor_LeftRear, MOTOR_PID_KP, 0, MOTOR_PID_KD);
+    PID_Init(&PID_Motor_RightRear, MOTOR_PID_KP, 0, MOTOR_PID_KD);
 }
 
 void Smoothing(float Vx, float Vy, float Vz)
@@ -61,6 +72,12 @@ void Solve_Speed(float Vx, float Vy, float Vz)
     MOTOR_B.Target=target_limit_float(MOTOR_B.Target,-amplitude,amplitude); 
     MOTOR_C.Target=target_limit_float(MOTOR_C.Target,-amplitude,amplitude); 
     MOTOR_D.Target=target_limit_float(MOTOR_D.Target,-amplitude,amplitude); 
+
+}
+
+
+void Set_PWM()
+{
 
 }
 
