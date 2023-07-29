@@ -32,32 +32,21 @@
 #define RIGHTREAR_MOTOR_PWM_GPIO_PIN GPIO_PIN_3
 
 #define WHEEL_DIAMETER 0.065f
+#define ENCODER_MULTIPLES 4
+#define ENCODER_PRECISION ENCODER_MULTIPLES*364
 
 
 extern uint32_t Move_X, Move_Y, Move_Z;
-
-
-extern uint32_t Motor_LeftFront_Target_Speed;
-extern uint32_t Motor_LeftRear_Target_Speed;
-extern uint32_t Motor_RightFront_Target_Speed;
-extern uint32_t Motor_RightRear_Target_Speed;
-
-extern uint32_t Motor_LeftFront_Speed_Previouse;
-extern uint32_t Motor_LeftRear_Speed_Previouse;
-extern uint32_t Motor_RightFront_Speed_Previouse;
-extern uint32_t Motor_RightRear_Speed_Previouse;
-
-
+extern float Kp=300,Ki=300; 
 
 typedef struct  
 {
 	float Encoder;
 	float Motor_PWM;
 	float Target;
-	float KP;
-	float KI;
+	float Kp;
+	float Ki;
 }Motor_Parameter;
-
 
 extern Motor_Parameter Motor_LeftFront, Motor_LeftRear, Motor_RightFront, Motor_RightRear;
 
@@ -68,5 +57,7 @@ typedef struct
 	float VY;
 	float VZ;
 }Smooth_Control;
+
+
 
 #endif
