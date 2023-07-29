@@ -1,16 +1,5 @@
 #include "motor.h"
 
-uint32_t Motor_LeftFront_Target_Speed  = 0;
-uint32_t Motor_LeftRear_Target_Speed   = 0;
-uint32_t Motor_RightFront_Target_Speed = 0;
-uint32_t Motor_RightRear_Target_Speed  = 0;
-
-uint32_t Motor_LeftFront_Speed_Previouse  = 0;
-uint32_t Motor_LeftRear_Speed_Previouse   = 0;
-uint32_t Motor_RightFront_Speed_Previouse = 0;
-uint32_t Motor_RightRear_Speed_Previouse  = 0;
-
-
 void Motor_Init(void)
 {
     HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
