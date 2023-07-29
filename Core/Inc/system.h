@@ -11,6 +11,8 @@
 #define MOTOR_PID_KI        0.0f
 #define MOTOR_PID_KD        0.0f
 
+#define PERIOD_INTERRUPT_TIM                        TIM1
+
 #define LEFTFRONT_MOTOR_IN1_GPIO_PORT               GPIOB
 #define LEFTFRONT_MOTOR_IN1_GPIO_PIN                GPIO_PIN_8
 #define LEFTFRONT_MOTOR_IN2_GPIO_PORT               GPIOB
