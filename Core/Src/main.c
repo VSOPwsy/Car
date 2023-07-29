@@ -25,6 +25,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "motor.h"
+#include "system.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -153,7 +154,7 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 10ms
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 10ms
 {
   if (htim->Instance == PERIOD_INTERRUPT_TIM)
   {

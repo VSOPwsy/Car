@@ -12,7 +12,7 @@ typedef struct{
     float Kp, Ki, Kd;
 } PID;
 
-void PID_Init(PID *);
+void PID_Init(PID *, float, float, float);
 
 void PID_Set_Kp(PID *, float);
 void PID_Set_Ki(PID *, float);

@@ -1,6 +1,5 @@
 #include "motor.h"
 
-
 PID PID_Motor_LeftFront;
 PID PID_Motor_RightFront;
 PID PID_Motor_LeftRear;
@@ -73,10 +72,10 @@ void Solve_Speed(float Vx, float Vy, float Vz)
         Vz = smooth_control.VZ;
     }
     
-    Motor_LeftFront.Target  = +Vy+Vx-Vz*(Axle_spacing+Wheel_spacing);
-    Motor_RightFront.Target = -Vy+Vx-Vz*(Axle_spacing+Wheel_spacing);
-    Motor_LeftRear.Target   = +Vy+Vx+Vz*(Axle_spacing+Wheel_spacing);
-    Motor_RightRear.Target  = -Vy+Vx+Vz*(Axle_spacing+Wheel_spacing);
+    Motor_LeftFront.Target  = +Vy+Vx-Vz*(AXLE_DISTANCE + WHEEL_DISTANCE);
+    Motor_RightFront.Target = -Vy+Vx-Vz*(AXLE_DISTANCE + WHEEL_DISTANCE);
+    Motor_LeftRear.Target   = +Vy+Vx+Vz*(AXLE_DISTANCE + WHEEL_DISTANCE);
+    Motor_RightRear.Target  = -Vy+Vx+Vz*(AXLE_DISTANCE + WHEEL_DISTANCE);
 
     Motor_LeftFront.Target  = target_limit_float(Motor_LeftFront.Target,  -MOTOR_SPEED_LIMIT , MOTOR_SPEED_LIMIT);
     Motor_RightFront.Target = target_limit_float(Motor_RightFront.Target, -MOTOR_SPEED_LIMIT , MOTOR_SPEED_LIMIT);
@@ -87,17 +86,17 @@ void Solve_Speed(float Vx, float Vy, float Vz)
 
 void Set_PWM()
 {
-    __HAL_TIM_SET_COMPARE(&LEFTFRONT_MOTOR_PWM,  LEFTFRONT_MOTOR_PWM_CHANNEL,  Motor_LeftFront.PWM);
-    __HAL_TIM_SET_COMPARE(&RIGHTFRONT_MOTOR_PWM, RIGHTFRONT_MOTOR_PWM_CHANNEL, Motor_RightFront.PWM);
-    __HAL_TIM_SET_COMPARE(&LEFTREAR_MOTOR_PWM,   LEFTREAR_MOTOR_PWM_CHANNEL,   Motor_LeftRear.PWM);
-    __HAL_TIM_SET_COMPARE(&RIGHTREAR_MOTOR_PWM,  RIGHTREAR_MOTOR_PWM_CHANNEL,  Motor_RightRear.PWM);
+    __HAL_TIM_SET_COMPARE(&LEFTFRONT_MOTOR_PWM,  LEFTFRONT_MOTOR_PWM_CHANNEL,  Motor_LeftFront.Motor_PWM);
+    __HAL_TIM_SET_COMPARE(&RIGHTFRONT_MOTOR_PWM, RIGHTFRONT_MOTOR_PWM_CHANNEL, Motor_RightFront.Motor_PWM);
+    __HAL_TIM_SET_COMPARE(&LEFTREAR_MOTOR_PWM,   LEFTREAR_MOTOR_PWM_CHANNEL,   Motor_LeftRear.Motor_PWM);
+    __HAL_TIM_SET_COMPARE(&RIGHTREAR_MOTOR_PWM,  RIGHTREAR_MOTOR_PWM_CHANNEL,  Motor_RightRear.Motor_PWM);
 }
 
 void Update_Motor_PID()
 {
-    Update_PID_DerivKnown(&PID_Motor_LeftFront,  Motor_LeftFront.Encoder,  0, &(Motor_LeftFront.PWM));
-    Update_PID_DerivKnown(&PID_Motor_RightFront, Motor_RightFront.Encoder, 0, &(Motor_RightFront.PWM));
-    Update_PID_DerivKnown(&PID_Motor_LeftRear,   Motor_LeftRear.Encoder,   0, &(Motor_LeftRear.PWM));
-    Update_PID_DerivKnown(&PID_Motor_RightRear,  Motor_RightRear.Encoder,  0, &(Motor_RightRear.PWM));
+    Update_PID_DerivKnown(&PID_Motor_LeftFront,  Motor_LeftFront.Encoder,  0, &(Motor_LeftFront.Motor_PWM));
+    Update_PID_DerivKnown(&PID_Motor_RightFront, Motor_RightFront.Encoder, 0, &(Motor_RightFront.Motor_PWM));
+    Update_PID_DerivKnown(&PID_Motor_LeftRear,   Motor_LeftRear.Encoder,   0, &(Motor_LeftRear.Motor_PWM));
+    Update_PID_DerivKnown(&PID_Motor_RightRear,  Motor_RightRear.Encoder,  0, &(Motor_RightRear.Motor_PWM));
 }
 
