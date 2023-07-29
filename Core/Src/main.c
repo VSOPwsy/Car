@@ -156,24 +156,9 @@ HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 10ms
 {
   if (htim->Instance == PERIOD_INTERRUPT_TIM)
   {
-    // divide by 10ms, that is, times 100
-    Motor_LeftFront.Encoder  =  __HAL_TIM_GET_COUNTER(&LEFTFRONT_MOTOR_ENCODER_TIM)  *100*WHEEL_DIAMETER/ENCODER_PRECISION;
-    Motor_LeftRear.Encoder   =  __HAL_TIM_GET_COUNTER(&LEFTREAR_MOTOR_ENCODER_TIM)   *100*WHEEL_DIAMETER/ENCODER_PRECISION;
-    Motor_RightFront.Encoder =  __HAL_TIM_GET_COUNTER(&RIGHTFRONT_MOTOR_ENCODER_TIM) *100*WHEEL_DIAMETER/ENCODER_PRECISION;
-    Motor_RightRear.Encoder  =  __HAL_TIM_GET_COUNTER(&RIGHTREAR_MOTOR_ENCODER_TIM)  *100*WHEEL_DIAMETER/ENCODER_PRECISION;
-
-
-
-    //HAL库读取TIM1 Encoder的计数值
-
-    Update_PID_DerivKnown(&PID_Motor_LeftFront, Motor_LeftFront.Encoder, 0, &(Motor_LeftFront.PWM));
-    Update_PID_DerivKnown(&PID_Motor_LeftRear, Motor_LeftRear.Encoder, 0, &(Motor_LeftRear.PWM));
-    Update_PID_DerivKnown(&PID_Motor_RightFront, Motor_RightFront.Encoder, 0, &(Motor_RightFront.PWM));
-    Update_PID_DerivKnown(&PID_Motor_RightRear, Motor_RightRear.Encoder, 0, &(Motor_RightRear.PWM));
-
-
-
-
+    Measure_Motor_Speed();
+    Update_Motor_PID();
+    Set_PWM();
   }
 }
 /* USER CODE END 4 */
