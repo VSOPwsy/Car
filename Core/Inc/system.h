@@ -2,6 +2,10 @@
 #define __SYSTEM_H
 
 #include "gpio.h"
+#include "tim.h"
+
+
+#define SMOOTH_CONTROL 1
 
 #define LEFTFRONT_MOTOR_IN1_GPIO_PORT GPIOB
 #define LEFTFRONT_MOTOR_IN1_GPIO_PIN GPIO_PIN_8
@@ -34,11 +38,9 @@
 #define WHEEL_DIAMETER 0.065f
 #define ENCODER_MULTIPLES 4
 #define ENCODER_PRECISION ENCODER_MULTIPLES*364
-
-#include "gpio.h"
-#include "tim.h"
-#include "usart.h"
-
+//¶¨ÒåÖá¾à¡¢ÂÖ¾àµÄºê
+#define WHEEL_DISTANCE 0.102f
+#define AXLE_DISTANCE 0.170f
 
 
 extern uint32_t Move_X, Move_Y, Move_Z;
