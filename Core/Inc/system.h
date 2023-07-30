@@ -8,13 +8,14 @@
 
 #define SMOOTH_CONTROL      1
 
-#define MOTOR_PID_KP        10000.0f
-#define MOTOR_PID_KI        20.0f
-#define MOTOR_PID_KD        0.0f
+#define MOTOR_PID_KP        				5000.0f
+#define MOTOR_PID_KI        				0.0f
+#define MOTOR_PID_KD        				0.0f
+#define MOTOR_PID_INTEGRAL_LIMIT		2e4f
 
-#define MOTOR_SPEED_LIMIT   3.5f
+#define MOTOR_SPEED_LIMIT   1.0f
 
-#define PERIOD_INTERRUPT_TIM                        TIM1
+#define PERIOD_INTERRUPT_TIM_HANDLER                htim1
 
 #define LEFTFRONT_MOTOR_IN1_GPIO_PORT               GPIOB
 #define LEFTFRONT_MOTOR_IN1_GPIO_PIN                GPIO_PIN_8
@@ -50,21 +51,20 @@
 
 #define WHEEL_DIAMETER              0.065f
 #define ENCODER_MULTIPLES           4
-#define ENCODER_PRECISION           ENCODER_MULTIPLES*364
+#define ENCODER_PRECISION           (ENCODER_MULTIPLES*364)
 #define WHEEL_DISTANCE              0.102f
 #define AXLE_DISTANCE               0.170f
 
+#define PI						  	3.141592f
 
-extern uint32_t Move_X, Move_Y, Move_Z;
-extern float Kp, Ki; 
+
+extern float Move_X, Move_Y, Move_Z;
 
 typedef struct
 {
 	float Encoder;
 	float Motor_PWM;
 	float Target;
-	float Kp;
-	float Ki;
 }Motor_Parameter;
 extern Motor_Parameter Motor_LeftFront, Motor_LeftRear, Motor_RightFront, Motor_RightRear;
 

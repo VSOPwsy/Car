@@ -11,7 +11,7 @@ void PID_Init(PID *pid, float Kp, float Ki, float Kd)
     pid->previous_bias = 0;
     pid->integral = 0;
 
-    pid->integrate_limit = 1e4f;
+    pid->integrate_limit = MOTOR_PID_INTEGRAL_LIMIT;
 }
 
 void PID_Set_Kp(PID *pid, float Kp)
@@ -60,7 +60,7 @@ void Update_PID_DerivKnown(PID *pid, float current, float derivative, float *out
     pid->integral = - pid->integrate_limit;
   }
 
-  *output = pid->Kp*pid->bias + pid->Ki*pid->integral + pid->Kd*derivative;
+  *output += pid->Kp*pid->bias + pid->Ki*pid->integral + pid->Kd*derivative;
 }
 
 void Update_PID(PID *pid, float current, float *output)

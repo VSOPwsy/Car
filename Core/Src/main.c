@@ -46,7 +46,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+uint8_t UART1_RX;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -76,7 +76,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  
+
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -98,15 +98,16 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   Motor_Init();
-	Move_X = 40000;
-  HAL_TIM_Base_Start_IT(&htim1);
+	Move_X = 0.5;
+  HAL_TIM_Base_Start_IT(&PERIOD_INTERRUPT_TIM_HANDLER);
+  HAL_UART_Receive_IT(&huart1, &UART1_RX, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		printf("%d\r\n", (int)Motor_LeftRear.Encoder);
+    //printf("Target=%f,Current=%f\r\n", Motor_LeftFront.Target, Motor_LeftFront.Encoder);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -156,12 +157,22 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 10ms
 {
-  if (htim->Instance == PERIOD_INTERRUPT_TIM)
+  if (htim == &PERIOD_INTERRUPT_TIM_HANDLER)
   {
     Measure_Motor_Speed();
     Solve_Speed(Move_X, Move_Y, Move_Z);
     Update_Motor_PID();
     Set_PWM();
+  }
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+  if (huart->Instance == USART1)
+  {
+		//Move_X = UART1_RX / 256.0f;
+		//Move_X = -Move_X;
+    HAL_UART_Receive_IT(&huart1, &UART1_RX, 1);
   }
 }
 /* USER CODE END 4 */

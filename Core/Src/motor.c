@@ -29,7 +29,7 @@ void Motor_Init(void)
 
 void Smoothing(float Vx, float Vy, float Vz)
 {
-    float step=0.01;
+    float step=0.05;
 
 	if	   (Vx>0) 	smooth_control.VX += step;
 	else if(Vx<0)	smooth_control.VX -= step;
@@ -50,16 +50,34 @@ void Smoothing(float Vx, float Vy, float Vz)
 
 void Measure_Motor_Speed(void)
 {
-    // divide by 10ms, that is, times 100
-    Motor_LeftFront.Encoder  =  __HAL_TIM_GET_COUNTER(&LEFTFRONT_MOTOR_ENCODER_TIM)  *100*WHEEL_DIAMETER/ENCODER_PRECISION;
-    Motor_RightFront.Encoder =  __HAL_TIM_GET_COUNTER(&RIGHTFRONT_MOTOR_ENCODER_TIM) *100*WHEEL_DIAMETER/ENCODER_PRECISION;
-    Motor_LeftRear.Encoder   =  __HAL_TIM_GET_COUNTER(&LEFTREAR_MOTOR_ENCODER_TIM)   *100*WHEEL_DIAMETER/ENCODER_PRECISION;
-    Motor_RightRear.Encoder  =  __HAL_TIM_GET_COUNTER(&RIGHTREAR_MOTOR_ENCODER_TIM)  *100*WHEEL_DIAMETER/ENCODER_PRECISION;
+    int32_t threshold = 60000;
 
+    int32_t LeftFront_cnt  = __HAL_TIM_GET_COUNTER(&LEFTFRONT_MOTOR_ENCODER_TIM);
+    int32_t RightFront_cnt = __HAL_TIM_GET_COUNTER(&RIGHTFRONT_MOTOR_ENCODER_TIM);
+    int32_t LeftRear_cnt   = __HAL_TIM_GET_COUNTER(&LEFTREAR_MOTOR_ENCODER_TIM);
+    int32_t RightRear_cnt  = __HAL_TIM_GET_COUNTER(&RIGHTREAR_MOTOR_ENCODER_TIM);
+
+	LeftFront_cnt  = LeftFront_cnt < threshold ? LeftFront_cnt : LeftFront_cnt - 65535;
+    LeftFront_cnt  = LeftFront_cnt >-threshold ? LeftFront_cnt : LeftFront_cnt + 65535;
+    RightFront_cnt = RightFront_cnt < threshold ? RightFront_cnt : RightFront_cnt - 65535;
+    RightFront_cnt = RightFront_cnt >-threshold ? RightFront_cnt : RightFront_cnt + 65535;
+    LeftRear_cnt   = LeftRear_cnt < threshold ? LeftRear_cnt : LeftRear_cnt - 65535;
+    LeftRear_cnt   = LeftRear_cnt >-threshold ? LeftRear_cnt : LeftRear_cnt + 65535;
+    RightRear_cnt  = RightRear_cnt < threshold ? RightRear_cnt : RightRear_cnt - 65535;
+    RightRear_cnt  = RightRear_cnt >-threshold ? RightRear_cnt : RightRear_cnt + 65535;
+    
+    // divide by 10ms, that is, times 100
+    Motor_LeftFront.Encoder  =  LeftFront_cnt  *100*PI*WHEEL_DIAMETER/ENCODER_PRECISION;
+    Motor_RightFront.Encoder =  RightFront_cnt *100*PI*WHEEL_DIAMETER/ENCODER_PRECISION;
+    Motor_LeftRear.Encoder   =  LeftRear_cnt   *100*PI*WHEEL_DIAMETER/ENCODER_PRECISION;
+    Motor_RightRear.Encoder  =  RightRear_cnt  *100*PI*WHEEL_DIAMETER/ENCODER_PRECISION;
+	
     __HAL_TIM_SET_COUNTER(&LEFTFRONT_MOTOR_ENCODER_TIM, 0);
     __HAL_TIM_SET_COUNTER(&RIGHTFRONT_MOTOR_ENCODER_TIM, 0);
     __HAL_TIM_SET_COUNTER(&LEFTREAR_MOTOR_ENCODER_TIM, 0);
     __HAL_TIM_SET_COUNTER(&RIGHTREAR_MOTOR_ENCODER_TIM, 0);
+		
+		
 }
 
 void Solve_Speed(float Vx, float Vy, float Vz)
@@ -101,6 +119,8 @@ void Set_PWM()
     __HAL_TIM_SET_COMPARE(&RIGHTREAR_MOTOR_PWM,  RIGHTREAR_MOTOR_PWM_CHANNEL,  float_abs(Motor_RightRear.Motor_PWM));
     HAL_GPIO_WritePin(RIGHTREAR_MOTOR_IN1_GPIO_PORT, RIGHTREAR_MOTOR_IN1_GPIO_PIN, Motor_RightRear.Motor_PWM>0?GPIO_PIN_SET:GPIO_PIN_RESET);
     HAL_GPIO_WritePin(RIGHTREAR_MOTOR_IN2_GPIO_PORT, RIGHTREAR_MOTOR_IN2_GPIO_PIN, Motor_RightRear.Motor_PWM<0?GPIO_PIN_SET:GPIO_PIN_RESET);
+
+    printf("PID_target=%f,Motor_Encoder=%f,Motor_PWM=%f\r\n", PID_Motor_LeftFront.target, Motor_LeftFront.Encoder, Motor_LeftFront.Motor_PWM);
 }
 
 void Update_Motor_PID()
