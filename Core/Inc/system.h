@@ -12,7 +12,7 @@
 #define MOTOR_PID_KI        				0.0f
 #define MOTOR_PID_KD        				0.0f
 #define MOTOR_PID_INTEGRAL_LIMIT		2e4f
-
+#define MOTOR_PWM_LIMIT      			63000.0f
 #define MOTOR_SPEED_LIMIT   1.0f
 
 #define PERIOD_INTERRUPT_TIM_HANDLER                htim1

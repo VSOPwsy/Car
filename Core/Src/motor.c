@@ -120,7 +120,7 @@ void Set_PWM()
     HAL_GPIO_WritePin(RIGHTREAR_MOTOR_IN1_GPIO_PORT, RIGHTREAR_MOTOR_IN1_GPIO_PIN, Motor_RightRear.Motor_PWM>0?GPIO_PIN_SET:GPIO_PIN_RESET);
     HAL_GPIO_WritePin(RIGHTREAR_MOTOR_IN2_GPIO_PORT, RIGHTREAR_MOTOR_IN2_GPIO_PIN, Motor_RightRear.Motor_PWM<0?GPIO_PIN_SET:GPIO_PIN_RESET);
 
-    printf("PID_target=%f,Motor_Encoder=%f,Motor_PWM=%f\r\n", PID_Motor_LeftFront.target, Motor_LeftFront.Encoder, Motor_LeftFront.Motor_PWM);
+    // printf("PID_target=%f,Motor_Encoder=%f,Motor_PWM=%f\r\n", PID_Motor_LeftFront.target, Motor_LeftFront.Encoder, Motor_LeftFront.Motor_PWM);
 }
 
 void Update_Motor_PID()
@@ -134,5 +134,11 @@ void Update_Motor_PID()
     Update_PID_DerivKnown(&PID_Motor_RightFront, Motor_RightFront.Encoder, 0, &(Motor_RightFront.Motor_PWM));
     Update_PID_DerivKnown(&PID_Motor_LeftRear,   Motor_LeftRear.Encoder,   0, &(Motor_LeftRear.Motor_PWM));
     Update_PID_DerivKnown(&PID_Motor_RightRear,  Motor_RightRear.Encoder,  0, &(Motor_RightRear.Motor_PWM));
+
+    Motor_LeftFront.Motor_PWM = target_limit_float(Motor_LeftFront.Motor_PWM, -MOTOR_PWM_LIMIT, MOTOR_PWM_LIMIT);
+    Motor_RightFront.Motor_PWM = target_limit_float(Motor_RightFront.Motor_PWM, -MOTOR_PWM_LIMIT, MOTOR_PWM_LIMIT);
+    Motor_LeftRear.Motor_PWM = target_limit_float(Motor_LeftRear.Motor_PWM, -MOTOR_PWM_LIMIT, MOTOR_PWM_LIMIT);
+    Motor_RightRear.Motor_PWM = target_limit_float(Motor_RightRear.Motor_PWM, -MOTOR_PWM_LIMIT, MOTOR_PWM_LIMIT);
+
 }
 
