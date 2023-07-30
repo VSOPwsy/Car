@@ -5,6 +5,7 @@
 #include "tim.h"
 #include "usart.h"
 #include "pid.h"
+#include "string.h"
 
 #define SMOOTH_CONTROL      1
 
@@ -21,33 +22,33 @@
 #define LEFTFRONT_MOTOR_IN1_GPIO_PIN                GPIO_PIN_8
 #define LEFTFRONT_MOTOR_IN2_GPIO_PORT               GPIOB
 #define LEFTFRONT_MOTOR_IN2_GPIO_PIN                GPIO_PIN_9
-#define LEFTFRONT_MOTOR_PWM                         htim2
-#define LEFTFRONT_MOTOR_PWM_CHANNEL                 TIM_CHANNEL_2
-#define LEFTFRONT_MOTOR_ENCODER_TIM                 htim4
+#define LEFTFRONT_MOTOR_PWM_TIM_HANDLER             htim2
+#define LEFTFRONT_MOTOR_PWM_TIM_CHANNEL             TIM_CHANNEL_2
+#define LEFTFRONT_MOTOR_ENCODER_TIM_HANDLER         htim4
 
 #define LEFTREAR_MOTOR_IN1_GPIO_PORT                GPIOC
 #define LEFTREAR_MOTOR_IN1_GPIO_PIN                 GPIO_PIN_2
 #define LEFTREAR_MOTOR_IN2_GPIO_PORT                GPIOC
 #define LEFTREAR_MOTOR_IN2_GPIO_PIN                 GPIO_PIN_3
-#define LEFTREAR_MOTOR_PWM                          htim2
-#define LEFTREAR_MOTOR_PWM_CHANNEL                  TIM_CHANNEL_4
-#define LEFTREAR_MOTOR_ENCODER_TIM                  htim3
+#define LEFTREAR_MOTOR_PWM_TIM_HANDLER              htim2
+#define LEFTREAR_MOTOR_PWM_TIM_CHANNEL              TIM_CHANNEL_4
+#define LEFTREAR_MOTOR_ENCODER_TIM_HANDLER          htim3
 
 #define RIGHTFRONT_MOTOR_IN1_GPIO_PORT              GPIOB
 #define RIGHTFRONT_MOTOR_IN1_GPIO_PIN               GPIO_PIN_4
 #define RIGHTFRONT_MOTOR_IN2_GPIO_PORT               GPIOB
 #define RIGHTFRONT_MOTOR_IN2_GPIO_PIN               GPIO_PIN_5
-#define RIGHTFRONT_MOTOR_PWM                        htim2
+#define RIGHTFRONT_MOTOR_PWM_TIM_HANDLER            htim2
 #define RIGHTFRONT_MOTOR_PWM_CHANNEL                TIM_CHANNEL_1
-#define RIGHTFRONT_MOTOR_ENCODER_TIM                htim8
+#define RIGHTFRONT_MOTOR_ENCODER_TIM_HANDLER        htim8
 
 #define RIGHTREAR_MOTOR_IN1_GPIO_PORT               GPIOC
 #define RIGHTREAR_MOTOR_IN1_GPIO_PIN                GPIO_PIN_0
 #define RIGHTREAR_MOTOR_IN2_GPIO_PORT               GPIOC
 #define RIGHTREAR_MOTOR_IN2_GPIO_PIN                GPIO_PIN_1
-#define RIGHTREAR_MOTOR_PWM                         htim2
+#define RIGHTREAR_MOTOR_PWM_TIM_HANDLER             htim2
 #define RIGHTREAR_MOTOR_PWM_CHANNEL                 TIM_CHANNEL_3
-#define RIGHTREAR_MOTOR_ENCODER_TIM                 htim5
+#define RIGHTREAR_MOTOR_ENCODER_TIM_HANDLER         htim5
 
 #define WHEEL_DIAMETER              0.065f
 #define ENCODER_MULTIPLES           4
@@ -56,6 +57,12 @@
 #define AXLE_DISTANCE               0.170f
 
 #define PI						  	3.141592f
+
+
+
+
+#define SERVO_UART_HANDLER          huart3
+
 
 
 extern float Move_X, Move_Y, Move_Z;

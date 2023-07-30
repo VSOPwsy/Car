@@ -162,7 +162,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 10ms
     Measure_Motor_Speed();
     Solve_Speed(Move_X, Move_Y, Move_Z);
     Update_Motor_PID();
-    Set_PWM();
+    Motor_Set_PWM();
   }
 }
 

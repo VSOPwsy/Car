@@ -12,7 +12,7 @@ void Motor_Init(void);
 void Smoothing(float Vx, float Vy, float Vz);
 void Measure_Motor_Speed(void);
 void Solve_Speed(float Vx, float Vy, float Vz);
-void Set_PWM(void);
+void Motor_Set_PWM(void);
 void Update_Motor_PID(void);
 
 #endif
