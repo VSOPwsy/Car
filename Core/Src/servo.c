@@ -1,7 +1,7 @@
 #include "servo.h"
 
+uint16_t Servo_0_Current_PWM;
 uint16_t Servo_1_Current_PWM;
-uint16_t Servo_2_Current_PWM;
 
 void Servo_Set_PWM(uint8_t ServoID, uint16_t PWM)
 {
