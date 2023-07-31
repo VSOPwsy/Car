@@ -10,33 +10,29 @@ void Track_Init(void)
 }
 
 void Determine_Angle(void){
-    float angle_current_0;
-    float angle_current_1;
-    angle_current_0 = Servo_Get_Angle(0x00);            //得到当前的角度
-    angle_current_1 = Servo_Get_Angle(0x01);
 
     if(Coordinates_UART_Rx.Coordinates.Y.as_uint16>200){          //如果y坐标偏离较大，则向上或向下转动
-        Servo_Set_Angle(0x01,60+angle_current_1);
+        Servo_Set_Angle(0x01,60+Servo_1_Current_PWM);
     }else if(Coordinates_UART_Rx.Coordinates.Y.as_uint16>150){
-        Servo_Set_Angle(0x01,30+angle_current_1);
+        Servo_Set_Angle(0x01,30+Servo_1_Current_PWM);
     }else if(Coordinates_UART_Rx.Coordinates.Y.as_uint16<90){
-        Servo_Set_Angle(0x01,-30+angle_current_1);
+        Servo_Set_Angle(0x01,-30+Servo_1_Current_PWM);
     }else if(Coordinates_UART_Rx.Coordinates.Y.as_uint16<40){
-        Servo_Set_Angle(0x01,-60+angle_current_1);
+        Servo_Set_Angle(0x01,-60+Servo_1_Current_PWM);
     }else{
-        Servo_Set_Angle(0x01,angle_current_1);
+        Servo_Set_Angle(0x01,Servo_1_Current_PWM);
     }
 
     if(Coordinates_UART_Rx.Coordinates.X.as_uint16>260){          //如果x坐标偏离较大，则向左或向右转动
-        Servo_Set_Angle(0x00,60+angle_current_0);
+        Servo_Set_Angle(0x00,60+Servo_0_Current_PWM);
     }else if(Coordinates_UART_Rx.Coordinates.X.as_uint16>200){
-        Servo_Set_Angle(0x00,30+angle_current_0);
+        Servo_Set_Angle(0x00,30+Servo_0_Current_PWM);
     }else if(Coordinates_UART_Rx.Coordinates.X.as_uint16<60){
-        Servo_Set_Angle(0x00,-60+angle_current_0);
+        Servo_Set_Angle(0x00,-60+Servo_0_Current_PWM);
     }else if(Coordinates_UART_Rx.Coordinates.X.as_uint16<120){
-        Servo_Set_Angle(0x00,-30+angle_current_0);
+        Servo_Set_Angle(0x00,-30+Servo_0_Current_PWM);
     }else{
-        Servo_Set_Angle(0x00,angle_current_0);
+        Servo_Set_Angle(0x00,Servo_0_Current_PWM);
     }
 
   
