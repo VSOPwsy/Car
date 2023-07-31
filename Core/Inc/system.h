@@ -95,7 +95,7 @@ typedef union {
 
 
 typedef union {
-    float as_uint16;
+    uint16_t as_uint16;
     uint8_t as_bytes[2];
 } uint16_union;
 

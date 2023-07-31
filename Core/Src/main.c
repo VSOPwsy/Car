@@ -49,6 +49,8 @@
 
 /* USER CODE BEGIN PV */
 uint8_t UART1_RX;
+uint8_t Rx_Cplt_Flag = 1;
+uint8_t cnt = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -113,6 +115,14 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+//		if (Rx_Cplt_Flag)
+//		{
+//			Servo_Set_Angle(0x00, -90);
+//			Rx_Cplt_Flag = 0;
+//		}
+//		Servo_Set_Angle(0x00, 90);
+//		HAL_Delay(1000);
+    //Determine_Angle();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -162,20 +172,27 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 10ms
 {
-  if (htim == &PERIOD_INTERRUPT_TIM_HANDLER)
-  {
-    Measure_Motor_Speed();
-    Solve_Speed(Move_X, Move_Y, Move_Z);
-    Update_Motor_PID();
-    Motor_Set_PWM();
-  }
+//  if (htim == &PERIOD_INTERRUPT_TIM_HANDLER)
+//  {
+//    Measure_Motor_Speed();
+//    Solve_Speed(Move_X, Move_Y, Move_Z);
+//    Update_Motor_PID();
+//    Motor_Set_PWM();
+//  }
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   if (huart == &huart1)
   {
-    Servo_Set_Angle(0x00, 90);
+		if (UART1_RX == 0x00)
+		{
+			Servo_Set_Angle(0x00, 90);
+		}
+		else if (UART1_RX == 0x01)
+		{
+			Servo_Set_Angle(0x00, -90);
+		}
     HAL_UART_Receive_IT(&huart1, &UART1_RX, 1);
   }
   else if (huart == &TRACK_TASK_UART_HANDLER)
@@ -190,6 +207,16 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     HAL_UART_Receive_IT(&SERVO_UART_HANDLER, &Servo_UART_Rx_Byte, 1);
   }
 }
+
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if (huart == &SERVO_UART_HANDLER)
+	{
+		Rx_Cplt_Flag = 1;
+	}
+}
+
+
 /* USER CODE END 4 */
 
 /**
