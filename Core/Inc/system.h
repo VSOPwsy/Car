@@ -64,6 +64,8 @@
 
 #define SERVO_UART_HANDLER          huart3
 
+#define TRACK_TASK_UART_HANDLER     huart2
+
 
 
 extern float Move_X, Move_Y, Move_Z;

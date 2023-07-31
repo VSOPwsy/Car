@@ -105,7 +105,8 @@ int main(void)
 	Move_X = 0;
   HAL_TIM_Base_Start_IT(&PERIOD_INTERRUPT_TIM_HANDLER);
   HAL_UART_Receive_IT(&huart1, &UART1_RX, 1);
-  HAL_UART_Receive_IT(&huart3, &Servo_UART_Rx_Byte, 1);
+  HAL_UART_Receive_IT(&TRACK_TASK_UART_HANDLER, &Track_UART_Rx_Byte, 1);
+  HAL_UART_Receive_IT(&SERVO_UART_HANDLER, &Servo_UART_Rx_Byte, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -177,16 +178,16 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     Servo_Set_Angle(0x00, 90);
     HAL_UART_Receive_IT(&huart1, &UART1_RX, 1);
   }
-  else if (huart == &huart2)
+  else if (huart == &TRACK_TASK_UART_HANDLER)
   {
     Coordinates_UART_Rx_Byte();
-    HAL_UART_Receive_IT(&huart2, &Track_UART_Rx_Byte, 1);
+    HAL_UART_Receive_IT(&TRACK_TASK_UART_HANDLER, &Track_UART_Rx_Byte, 1);
   }
   
-  else if (huart == &huart3)
+  else if (huart == &SERVO_UART_HANDLER)
   {
     Servo_Response_UART_Rx_Byte();
-    HAL_UART_Receive_IT(&huart3, &Servo_UART_Rx_Byte, 1);
+    HAL_UART_Receive_IT(&SERVO_UART_HANDLER, &Servo_UART_Rx_Byte, 1);
   }
 }
 /* USER CODE END 4 */
