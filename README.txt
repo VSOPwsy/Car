@@ -21,3 +21,5 @@ Servo#001(lower):
             min         center          max
     PWM:    500         1500            2500
     Angle:  -135        0               135
+
+last version:   9aa106a    7/31
