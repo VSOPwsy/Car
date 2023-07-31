@@ -50,8 +50,7 @@
 
 /* USER CODE BEGIN PV */
 uint8_t UART1_RX;
-uint8_t Rx_Cplt_Flag = 1;
-uint8_t cnt = 0;
+uint8_t Servo_Control_State = SERVO_0_GET;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -106,21 +105,22 @@ int main(void)
   /* USER CODE BEGIN 2 */
   Motor_Init();
   Track_Init();
+  Servo_Init();
 	Move_X = 0;
   HAL_TIM_Base_Start_IT(&PERIOD_INTERRUPT_TIM_HANDLER);
   HAL_UART_Receive_IT(&huart1, &UART1_RX, 1);
   HAL_UART_Receive_IT(&TRACK_TASK_UART_HANDLER, &Track_UART_Rx_Byte, 1);
-  HAL_UART_Receive_IT(&SERVO_UART_HANDLER, &Servo_UART_Rx_Byte, 1);
+  HAL_UARTEx_ReceiveToIdle_DMA(&SERVO_UART_HANDLER, Servo_0.Response_UART_Rx.Response_Temp, 10);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		Servo_Set_Angle(0x00, 90);
-		HAL_Delay(1000);
-		Servo_Set_Angle(0x00, -90);
-		HAL_Delay(1000);
+//		Servo_Set_PWM(0x00, 500);
+//		HAL_Delay(5);
+//		Servo_Set_PWM(0x01, 500);
+//		HAL_Delay(5);
     //Determine_Angle();
     /* USER CODE END WHILE */
 
@@ -177,6 +177,48 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 10ms
     Solve_Speed(Move_X, Move_Y, Move_Z);
     Update_Motor_PID();
     Motor_Set_PWM();
+		
+		switch (Servo_Control_State)
+    {
+    case SERVO_0_GET:
+      Servo_Get_Position(0x00);
+      HAL_UARTEx_ReceiveToIdle_DMA(&SERVO_UART_HANDLER, Servo_0.Response_UART_Rx.Response_Temp, 10);
+      break;
+
+    case SERVO_0_SET:
+      if (Servo_Control_Mode == SERVO_CONTROL_BY_PWM)
+      {
+        Servo_Set_PWM(0x00, Servo_0.Target_PWM);
+      }
+      else if (Servo_Control_Mode == SERVO_CONTROL_BY_ANGLE)
+      {
+        Servo_Set_Angle(0x00, Servo_0.Target_Angle);
+      }
+      Servo_Control_State = SERVO_1_GET;
+      break;
+
+    case SERVO_1_GET:
+      Servo_Get_Position(0x01);
+      HAL_UARTEx_ReceiveToIdle_DMA(&SERVO_UART_HANDLER, Servo_1.Response_UART_Rx.Response_Temp, 10);
+      break;
+      
+    case SERVO_1_SET:
+      if (Servo_Control_Mode == SERVO_CONTROL_BY_PWM)
+      {
+        Servo_Set_PWM(0x01, Servo_1.Target_PWM);
+      }
+      else if (Servo_Control_Mode == SERVO_CONTROL_BY_ANGLE)
+      {
+        Servo_Set_Angle(0x01, Servo_1.Target_Angle);
+      }
+      Servo_Control_State = SERVO_0_GET;
+      break;
+    
+    default:
+      Servo_Control_State = SERVO_0_GET;
+      break;
+    }
+		
   }
 }
 
@@ -184,14 +226,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   if (huart == &huart1)
   {
-		if (UART1_RX == 0x00)
-		{
-			Servo_Set_Angle(0x00, 90);
-		}
-		else if (UART1_RX == 0x01)
-		{
-			Servo_Set_Angle(0x00, -90);
-		}
     HAL_UART_Receive_IT(&huart1, &UART1_RX, 1);
   }
   else if (huart == &TRACK_TASK_UART_HANDLER)
@@ -199,11 +233,30 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     Coordinates_UART_Rx_Byte();
     HAL_UART_Receive_IT(&TRACK_TASK_UART_HANDLER, &Track_UART_Rx_Byte, 1);
   }
-  
-  else if (huart == &SERVO_UART_HANDLER)
+}
+
+void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
+{
+  if (huart == &SERVO_UART_HANDLER)
   {
-    Servo_Response_UART_Rx_Byte();
-    HAL_UART_Receive_IT(&SERVO_UART_HANDLER, &Servo_UART_Rx_Byte, 1);
+    switch (Servo_Control_State)
+    {
+    case SERVO_0_GET:
+      memcpy(Servo_0.Response_UART_Rx.Response, Servo_0.Response_UART_Rx.Response_Temp, 10);
+      HAL_UARTEx_ReceiveToIdle_DMA(&SERVO_UART_HANDLER, Servo_1.Response_UART_Rx.Response_Temp, 10);
+			Servo_Control_State = SERVO_0_SET;
+      break;
+
+    case SERVO_1_GET:
+      memcpy(Servo_1.Response_UART_Rx.Response, Servo_1.Response_UART_Rx.Response_Temp, 10);
+      HAL_UARTEx_ReceiveToIdle_DMA(&SERVO_UART_HANDLER, Servo_0.Response_UART_Rx.Response_Temp, 10);
+      Servo_Control_State = SERVO_1_SET;
+      break;
+    
+    default:
+      HAL_UARTEx_ReceiveToIdle_DMA(&SERVO_UART_HANDLER, Servo_1.Response_UART_Rx.Response_Temp, 10);
+      break;
+    }
   }
 }
 /* USER CODE END 4 */

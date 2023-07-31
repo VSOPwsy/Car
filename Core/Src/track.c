@@ -12,7 +12,7 @@ void Track_Init(void)
 void Determine_Angle(void){
 
     // if(Coordinates_UART_Rx.Coordinates.Y.as_uint16>200){          //如果y坐标偏离较大，则向上或向下转动
-        Servo_Set_Angle(0x01,60+Servo_1_Current_PWM);
+    //    Servo_Set_Angle(0x01,60+Servo_1_Current_PWM);
     // }else if(Coordinates_UART_Rx.Coordinates.Y.as_uint16>150){
     //     Servo_Set_Angle(0x01,30+Servo_1_Current_PWM);
     // }else if(Coordinates_UART_Rx.Coordinates.Y.as_uint16<90){
