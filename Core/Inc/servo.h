@@ -19,6 +19,7 @@
 extern uint8_t Servo_UART_Rx_Byte;
 extern uint16_t Servo_0_Current_PWM;
 extern uint16_t Servo_1_Current_PWM;
+extern uint8_t cmd[50];
 
 typedef struct
 {

@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dma.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -92,6 +93,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_TIM1_Init();
   MX_TIM2_Init();
   MX_TIM3_Init();
@@ -115,13 +117,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//		if (Rx_Cplt_Flag)
-//		{
-//			Servo_Set_Angle(0x00, -90);
-//			Rx_Cplt_Flag = 0;
-//		}
-//		Servo_Set_Angle(0x00, 90);
-//		HAL_Delay(1000);
+		Servo_Set_Angle(0x00, 90);
+		HAL_Delay(1000);
+		Servo_Set_Angle(0x00, -90);
+		HAL_Delay(1000);
     //Determine_Angle();
     /* USER CODE END WHILE */
 
@@ -172,13 +171,13 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 10ms
 {
-//  if (htim == &PERIOD_INTERRUPT_TIM_HANDLER)
-//  {
-//    Measure_Motor_Speed();
-//    Solve_Speed(Move_X, Move_Y, Move_Z);
-//    Update_Motor_PID();
-//    Motor_Set_PWM();
-//  }
+  if (htim == &PERIOD_INTERRUPT_TIM_HANDLER)
+  {
+    Measure_Motor_Speed();
+    Solve_Speed(Move_X, Move_Y, Move_Z);
+    Update_Motor_PID();
+    Motor_Set_PWM();
+  }
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
@@ -207,16 +206,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     HAL_UART_Receive_IT(&SERVO_UART_HANDLER, &Servo_UART_Rx_Byte, 1);
   }
 }
-
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
-{
-	if (huart == &SERVO_UART_HANDLER)
-	{
-		Rx_Cplt_Flag = 1;
-	}
-}
-
-
 /* USER CODE END 4 */
 
 /**

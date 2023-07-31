@@ -59,9 +59,6 @@
 
 #define PI						  	3.141592f
 
-
-
-
 #define SERVO_UART_HANDLER          huart3
 
 #define TRACK_TASK_UART_HANDLER     huart2
