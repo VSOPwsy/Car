@@ -24,6 +24,8 @@ extern Coor_UART_Rx Coordinates_UART_Rx;
 void Track_Init(void);
 void Coordinates_UART_Rx_Byte(uint8_t byte);
 
-extern uint8_t UART1_RX, UART2_RX, UART3_RX;
+extern uint8_t Track_UART_Rx_Byte;
+
+
 
 #endif

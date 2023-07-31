@@ -48,7 +48,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-extern uint8_t UART1_RX, UART2_RX, UART3_RX;
+uint8_t UART1_RX, UART3_RX;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -179,8 +179,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   }
   else if (huart == &huart2)
   {
-    Coordinates_UART_Rx_Byte(UART2_RX);
-    HAL_UART_Receive_IT(&huart2, &UART2_RX, 1);
+    Coordinates_UART_Rx_Byte(Track_UART_Rx_Byte);
+    HAL_UART_Receive_IT(&huart2, &Track_UART_Rx_Byte, 1);
   }
   
   else if (huart == &huart3)

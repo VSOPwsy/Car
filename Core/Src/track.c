@@ -1,7 +1,7 @@
 #include "track.h"
 
 Coor_UART_Rx Coordinates_UART_Rx;
-uint8_t UART1_RX, UART2_RX, UART3_RX;
+uint8_t Track_UART_Rx_Byte;
 
 void Track_Init(void)
 {
@@ -14,7 +14,7 @@ void Coordinates_UART_Rx_Byte(uint8_t byte)
     switch (Coordinates_UART_Rx.Rx_Index)
     {
     case 0:
-      if (UART2_RX == Coordinates_UART_Rx.Header)
+      if (Track_UART_Rx_Byte == Coordinates_UART_Rx.Header)
       {
         Coordinates_UART_Rx.Rx_Index++;
       }      
@@ -41,7 +41,7 @@ void Coordinates_UART_Rx_Byte(uint8_t byte)
         break;
 
     case 5:
-        if (UART2_RX == Coordinates_UART_Rx.Tail)
+        if (Track_UART_Rx_Byte == Coordinates_UART_Rx.Tail)
         {
             Coordinates_UART_Rx.Rx_Index = 0;
 
