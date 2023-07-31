@@ -59,6 +59,6 @@ void Servo_Response_UART_Rx_Byte(void);
 
 void Servo_Get_Position(uint8_t ServoID);
 
-
+uint16_t Get_PWM_From_Response(uint8_t *Response);
 
 #endif

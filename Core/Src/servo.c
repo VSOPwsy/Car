@@ -65,3 +65,13 @@ void Servo_Get_Position(uint8_t ServoID)
     HAL_UART_Transmit_IT(&SERVO_UART_HANDLER, cmd, 9);
 }
 
+uint16_t Get_PWM_From_Response(uint8_t *Response)
+{
+    char number[4] = "";
+    memcpy(number, 5+(char *)Response, 4);
+
+    // 将字符串转换为整数
+    uint16_t pwm = atoi(number);
+
+    return pwm;
+}

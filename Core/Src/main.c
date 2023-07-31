@@ -243,12 +243,16 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
     {
     case SERVO_0_GET:
       memcpy(Servo_0.Response_UART_Rx.Response, Servo_0.Response_UART_Rx.Response_Temp, 10);
+      Servo_0.Current_PWM = Get_PWM_From_Response(Servo_0.Response_UART_Rx.Response);
+      Servo_0.Current_Angle = Servo_0.Current_PWM * (SERVO_ANGLE_MAX - SERVO_ANGLE_MIN) / (SERVO_PWM_MAX - SERVO_PWM_MIN) + SERVO_ANGLE_MIN;
       HAL_UARTEx_ReceiveToIdle_DMA(&SERVO_UART_HANDLER, Servo_1.Response_UART_Rx.Response_Temp, 10);
 			Servo_Control_State = SERVO_0_SET;
       break;
 
     case SERVO_1_GET:
       memcpy(Servo_1.Response_UART_Rx.Response, Servo_1.Response_UART_Rx.Response_Temp, 10);
+      Servo_1.Current_PWM = Get_PWM_From_Response(Servo_1.Response_UART_Rx.Response);
+      Servo_1.Current_Angle = Servo_1.Current_PWM * (SERVO_ANGLE_MAX - SERVO_ANGLE_MIN) / (SERVO_PWM_MAX - SERVO_PWM_MIN) + SERVO_ANGLE_MIN;
       HAL_UARTEx_ReceiveToIdle_DMA(&SERVO_UART_HANDLER, Servo_0.Response_UART_Rx.Response_Temp, 10);
       Servo_Control_State = SERVO_1_SET;
       break;
