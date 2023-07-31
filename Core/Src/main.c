@@ -48,7 +48,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-uint8_t UART1_RX, UART3_RX;
+uint8_t UART1_RX;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -105,7 +105,7 @@ int main(void)
 	Move_X = 0;
   HAL_TIM_Base_Start_IT(&PERIOD_INTERRUPT_TIM_HANDLER);
   HAL_UART_Receive_IT(&huart1, &UART1_RX, 1);
-  HAL_UART_Receive_IT(&huart3, &UART3_RX, 1);
+  HAL_UART_Receive_IT(&huart3, &Servo_UART_Rx_Byte, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -179,13 +179,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   }
   else if (huart == &huart2)
   {
-    Coordinates_UART_Rx_Byte(Track_UART_Rx_Byte);
+    Coordinates_UART_Rx_Byte();
     HAL_UART_Receive_IT(&huart2, &Track_UART_Rx_Byte, 1);
   }
   
   else if (huart == &huart3)
   {
-    HAL_UART_Receive_IT(&huart3, &UART3_RX, 1);
+    Servo_Response_UART_Rx_Byte();
+    HAL_UART_Receive_IT(&huart3, &Servo_UART_Rx_Byte, 1);
   }
 }
 /* USER CODE END 4 */

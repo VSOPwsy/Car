@@ -22,7 +22,7 @@ typedef struct
 extern Coor_UART_Rx Coordinates_UART_Rx;
 
 void Track_Init(void);
-void Coordinates_UART_Rx_Byte(uint8_t byte);
+void Coordinates_UART_Rx_Byte(void);
 
 extern uint8_t Track_UART_Rx_Byte;
 

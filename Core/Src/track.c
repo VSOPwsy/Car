@@ -9,7 +9,7 @@ void Track_Init(void)
     Coordinates_UART_Rx.Tail = 0x55;
 }
 
-void Coordinates_UART_Rx_Byte(uint8_t byte)
+void Coordinates_UART_Rx_Byte()
 {
     switch (Coordinates_UART_Rx.Rx_Index)
     {
@@ -21,22 +21,22 @@ void Coordinates_UART_Rx_Byte(uint8_t byte)
       break;
 
     case 1:
-        Coordinates_UART_Rx.Coordinates_Buffer.X.as_bytes[0] = byte;
+        Coordinates_UART_Rx.Coordinates_Buffer.X.as_bytes[0] = Track_UART_Rx_Byte;
         Coordinates_UART_Rx.Rx_Index++;
         break;
 
     case 2:
-        Coordinates_UART_Rx.Coordinates_Buffer.X.as_bytes[1] = byte;
+        Coordinates_UART_Rx.Coordinates_Buffer.X.as_bytes[1] = Track_UART_Rx_Byte;
         Coordinates_UART_Rx.Rx_Index++;
         break;
 
     case 3:
-        Coordinates_UART_Rx.Coordinates_Buffer.Y.as_bytes[0] = byte;
+        Coordinates_UART_Rx.Coordinates_Buffer.Y.as_bytes[0] = Track_UART_Rx_Byte;
         Coordinates_UART_Rx.Rx_Index++;
         break;
 
     case 4:
-        Coordinates_UART_Rx.Coordinates_Buffer.Y.as_bytes[1] = byte;
+        Coordinates_UART_Rx.Coordinates_Buffer.Y.as_bytes[1] = Track_UART_Rx_Byte;
         Coordinates_UART_Rx.Rx_Index++;
         break;
 
@@ -46,6 +46,10 @@ void Coordinates_UART_Rx_Byte(uint8_t byte)
             Coordinates_UART_Rx.Rx_Index = 0;
 
             Coordinates_UART_Rx.Coordinates.X.as_uint16 = Coordinates_UART_Rx.Coordinates_Buffer.X.as_uint16;
+        }
+        else
+        {
+            Coordinates_UART_Rx.Rx_Index = 0;
         }
         break;
     
