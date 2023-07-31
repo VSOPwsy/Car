@@ -19,7 +19,7 @@ void Servo_Set_Angle(uint8_t ServoID, float Angle)
     Servo_Set_PWM(ServoID, PWM);
 }
 
-void Servo_Set_PWM_Group(uint8_t ServoID)
+void Servo_Set_PWM_Group(uint8_t ServoID_1, uint16_t PWM_1, uint8_t ServoID_2, uint16_t PWM_2)
 {
     uint8_t cmd[37];
     sprintf((char*)cmd, "{G0000#%03dP%04dT0500!#%03dP%04dT0500!}", ServoID_1, PWM_1 < SERVO_PWM_MIN ? SERVO_PWM_MIN : (PWM_1 > SERVO_PWM_MAX ? SERVO_PWM_MAX : PWM_1), ServoID_2, PWM_2 < SERVO_PWM_MIN ? SERVO_PWM_MIN : (PWM_2 > SERVO_PWM_MAX ? SERVO_PWM_MAX : PWM_2));
