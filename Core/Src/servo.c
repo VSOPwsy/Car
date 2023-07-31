@@ -3,6 +3,7 @@
 uint8_t Servo_UART_Rx_Byte;
 uint16_t Servo_0_Current_PWM;
 uint16_t Servo_1_Current_PWM;
+Srv_Response Servo_Response_UART_Rx;
 
 void Servo_Set_PWM(uint8_t ServoID, uint16_t PWM)
 {
@@ -31,20 +32,13 @@ void Servo_Set_Angle_Group(uint8_t ServoID_1, float Angle_1, uint8_t ServoID_2, 
     Servo_Set_PWM_Group(ServoID_1, PWM_1, ServoID_2, PWM_2);
 }
 
-uint16_t Servo_Get_PWM(uint8_t ServoID)
+void Servo_Get_Position(uint8_t ServoID)
 {
     Servo_Response_UART_Rx.Flag = 0;
     uint8_t cmd[9];
     sprintf((char*)cmd, "#%03dPRAD!", ServoID);
     HAL_UART_Transmit_IT(&SERVO_UART_HANDLER, cmd, 9);
 }
-
-float Servo_Get_Angle(uint8_t ServoID)
-{
-    uint16_t PWM = Servo_Get_PWM(ServoID);
-    return (float)(PWM - SERVO_PWM_CENTER) * (SERVO_ANGLE_MAX - SERVO_ANGLE_MIN) / (SERVO_PWM_MAX - SERVO_PWM_MIN);
-}
-
 
 void Servo_Response_UART_Rx_Byte()
 {
@@ -66,8 +60,8 @@ void Servo_Response_UART_Rx_Byte()
         Servo_Response_UART_Rx.Flag = 1;
 
         char id_number[3] = "", pwm_number[4] = "";
-        strncpy(id_number, 1, 3);
-        strncpy(pwm_number, 4, 7);
+        strncpy(id_number, (char *)(&Servo_Response_UART_Rx.Response[0] + 1), 3);
+        strncpy(pwm_number, (char *)(&Servo_Response_UART_Rx.Response[0] + 4), 7);
         uint8_t id = atoi(id_number), pwm = atoi(pwm_number);
 
         if (id == 0x00)
