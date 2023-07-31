@@ -24,8 +24,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "motor.h"
 #include "system.h"
+#include "motor.h"
+#include "servo.h"
+#include "track.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -46,7 +48,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-uint8_t UART1_RX;
+extern uint8_t UART1_RX, UART2_RX, UART3_RX;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -96,18 +98,20 @@ int main(void)
   MX_TIM8_Init();
   MX_USART3_UART_Init();
   MX_USART1_UART_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   Motor_Init();
-	Move_X = 0.5;
+  Track_Init();
+	Move_X = 0;
   HAL_TIM_Base_Start_IT(&PERIOD_INTERRUPT_TIM_HANDLER);
   HAL_UART_Receive_IT(&huart1, &UART1_RX, 1);
+  HAL_UART_Receive_IT(&huart3, &UART3_RX, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    //printf("Target=%f,Current=%f\r\n", Motor_LeftFront.Target, Motor_LeftFront.Encoder);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -168,11 +172,20 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // 10ms
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-  if (huart->Instance == USART1)
+  if (huart == &huart1)
   {
-		//Move_X = UART1_RX / 256.0f;
-		//Move_X = -Move_X;
+    Servo_Set_Angle(0x00, 90);
     HAL_UART_Receive_IT(&huart1, &UART1_RX, 1);
+  }
+  else if (huart == &huart2)
+  {
+    Coordinates_UART_Rx_Byte(UART2_RX);
+    HAL_UART_Receive_IT(&huart2, &UART2_RX, 1);
+  }
+  
+  else if (huart == &huart3)
+  {
+    HAL_UART_Receive_IT(&huart3, &UART3_RX, 1);
   }
 }
 /* USER CODE END 4 */

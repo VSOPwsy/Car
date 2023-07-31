@@ -6,6 +6,7 @@
 #include "usart.h"
 #include "pid.h"
 #include "string.h"
+#include "stdlib.h"
 
 #define SMOOTH_CONTROL      1
 
@@ -83,6 +84,19 @@ typedef struct
 	float VZ;
 }Smooth_Control;
 extern Smooth_Control smooth_control;
+
+
+typedef union {
+    float as_float;
+    uint8_t as_bytes[4];
+} float_union;
+
+
+typedef union {
+    float as_uint16;
+    uint8_t as_bytes[2];
+} uint16_union;
+
 
 float target_limit_float(float, float, float);
 int target_limit_int(int, int, int);
