@@ -1,6 +1,8 @@
 #include "servo.h"
 
 uint8_t Servo_UART_Rx_Byte;
+uint16_t Servo_0_Current_PWM;
+uint16_t Servo_1_Current_PWM;
 
 void Servo_Set_PWM(uint8_t ServoID, uint16_t PWM)
 {
@@ -62,6 +64,20 @@ void Servo_Response_UART_Rx_Byte()
         Servo_Response_UART_Rx.Index = 0;
         memcpy(Servo_Response_UART_Rx.Response, Servo_Response_UART_Rx.Response_Temp, 10);
         Servo_Response_UART_Rx.Flag = 1;
+
+        char id_number[3] = "", pwm_number[4] = "";
+        strncpy(id_number, 1, 3);
+        strncpy(pwm_number, 4, 7);
+        uint8_t id = atoi(id_number), pwm = atoi(pwm_number);
+
+        if (id == 0x00)
+        {
+            Servo_0_Current_PWM = pwm;
+        }
+        else if (id == 0x01)
+        {
+            Servo_1_Current_PWM = pwm;
+        }
     }
     else
     {

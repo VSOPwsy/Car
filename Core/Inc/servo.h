@@ -17,12 +17,15 @@
 
 
 extern uint8_t Servo_UART_Rx_Byte;
+extern uint8_t Servo_0_Current_PWM;
+extern uint8_t Servo_1_Current_PWM;
 
 typedef struct
 {
     uint8_t Index;
     uint8_t Response_Temp[10];
     uint8_t Response[10];
+    uint8_t Rx_Done_Flag;
     uint8_t Flag;
 } Srv_Response;
 extern Srv_Response Servo_Response_UART_Rx;
