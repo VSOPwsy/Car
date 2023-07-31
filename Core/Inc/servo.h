@@ -55,8 +55,6 @@ void Servo_Set_Angle(uint8_t ServoID, float Angle); // from -135 to 135
 void Servo_Set_PWM_Group(uint8_t ServoID_1, uint16_t PWM_1, uint8_t ServoID_2, uint16_t PWM_2);
 void Servo_Set_Angle_Group(uint8_t ServoID_1, float Angle_1, uint8_t ServoID_2, float Angle_2);
 
-void Servo_Response_UART_Rx_Byte(void);
-
 void Servo_Get_Position(uint8_t ServoID);
 
 uint16_t Get_PWM_From_Response(uint8_t *Response);
