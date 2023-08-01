@@ -14,12 +14,12 @@ RightRear : PA0(TIM5_CH1), PA1(TIM5_CH2)  ->  Rear  TB6612: E2A, E2B
 Servo(USART3):
 Servo#000(upper):
             min         center          max
-    PWM:    500         1500            2500
-    Angle:  -135        0               135
+    PWM:    834         1500            2166
+    Angle:  -90         0               90
 
 Servo#001(lower):
             min         center          max
-    PWM:    500         1500            2500
-    Angle:  -135        0               135
+    PWM:    1500        2000            2500
+    Angle:  0           67.5            135
 
 last version:   9aa106a    7/31

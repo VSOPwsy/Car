@@ -9,16 +9,24 @@ uint8_t cmd[50];
 void Servo_Init(void)
 {
     Servo_0.ID = 0;
-    Servo_0.Current_PWM = SERVO_PWM_CENTER;
-    Servo_0.Current_Angle = SERVO_ANGLE_CENTER;
-    Servo_0.Target_PWM = SERVO_PWM_CENTER;
-    Servo_0.Target_Angle = SERVO_ANGLE_CENTER;
+    Servo_0.Angle_Max = (SERVO_0_PWM_MAX - 500) * 270.0f / 2000 - 135;
+    Servo_0.Angle_Min = (SERVO_0_PWM_MIN - 500) * 270.0f / 2000 - 135;
+    Servo_0.PWM_Max = SERVO_0_PWM_MAX;
+    Servo_0.PWM_Min = SERVO_0_PWM_MIN;
+    Servo_0.Target_PWM = (Servo_0.PWM_Max + Servo_0.PWM_Min) / 2;
+    Servo_0.Target_Angle = (Servo_0.Angle_Max + Servo_0.Angle_Min) / 2;
+    Servo_0.Current_Angle = Servo_0.Target_Angle;
+    Servo_0.Current_PWM = Servo_0.Target_PWM;
     
     Servo_1.ID = 1;
-    Servo_1.Current_PWM = SERVO_PWM_CENTER;
-    Servo_1.Current_Angle = SERVO_ANGLE_CENTER;
-    Servo_1.Target_PWM = SERVO_PWM_CENTER;
-    Servo_1.Target_Angle = SERVO_ANGLE_CENTER;
+    Servo_1.Angle_Max = (SERVO_1_PWM_MAX - 500) * 270.0f / 2000 - 135;
+    Servo_1.Angle_Min = (SERVO_1_PWM_MIN - 500) * 270.0f / 2000 - 135;
+    Servo_1.PWM_Max = SERVO_1_PWM_MAX;
+    Servo_1.PWM_Min = SERVO_1_PWM_MIN;
+    Servo_1.Target_PWM = (Servo_1.PWM_Max + Servo_1.PWM_Min) / 2;
+    Servo_1.Target_Angle = (Servo_1.Angle_Max + Servo_1.Angle_Min) / 2;
+    Servo_1.Current_Angle = Servo_1.Target_Angle;
+    Servo_1.Current_PWM = Servo_1.Target_PWM;
 }
 
 void Servo_Set_Control_Mode(uint8_t Mode)
@@ -33,42 +41,36 @@ void Servo_Set_Control_Mode(uint8_t Mode)
     }
 }
 
-void Servo_Set_PWM(uint8_t ServoID, uint16_t PWM)
+void Servo_Set_PWM(Servo servo, uint16_t PWM)
 {
-    sprintf((char*)cmd, "#%03dP%04dT0500!", ServoID, PWM < SERVO_PWM_MIN ? SERVO_PWM_MIN : (PWM > SERVO_PWM_MAX ? SERVO_PWM_MAX : PWM));
+    sprintf((char*)cmd, "#%03dP%04dT0500!", servo.ID, PWM < servo.PWM_Min ? servo.PWM_Min : (PWM > servo.PWM_Max ? servo.PWM_Max : PWM));
     HAL_UART_Transmit_DMA(&SERVO_UART_HANDLER, cmd, 15);
     
 }
 
-void Servo_Set_Angle(uint8_t ServoID, float Angle)
+void Servo_Set_Angle(Servo servo, float Angle)
 {
-    uint16_t PWM = (uint16_t)(Angle * (SERVO_PWM_MAX - SERVO_PWM_MIN) / (SERVO_ANGLE_MAX - SERVO_ANGLE_MIN) + SERVO_PWM_CENTER);
-    Servo_Set_PWM(ServoID, PWM);
+    float agl = Angle < servo.Angle_Min ? servo.Angle_Min : (Angle > servo.Angle_Max ? servo.Angle_Max : Angle);
+    uint16_t PWM = (agl+135)*(servo.PWM_Max - servo.PWM_Min)/(servo.Angle_Max - servo.Angle_Min) + 500;
+    Servo_Set_PWM(servo, PWM);
 }
 
-void Servo_Set_PWM_Group(uint8_t ServoID_1, uint16_t PWM_1, uint8_t ServoID_2, uint16_t PWM_2)
+void Servo_Get_Position(Servo servo)
 {
-    sprintf((char*)cmd, "{G0000#%03dP%04dT0500!#%03dP%04dT0500!}", ServoID_1, PWM_1 < SERVO_PWM_MIN ? SERVO_PWM_MIN : (PWM_1 > SERVO_PWM_MAX ? SERVO_PWM_MAX : PWM_1), ServoID_2, PWM_2 < SERVO_PWM_MIN ? SERVO_PWM_MIN : (PWM_2 > SERVO_PWM_MAX ? SERVO_PWM_MAX : PWM_2));
-    HAL_UART_Transmit_DMA(&SERVO_UART_HANDLER, cmd, 37);
+    sprintf((char*)cmd, "#%03dPRAD!", servo.ID);
+    HAL_UART_Transmit_IT(&SERVO_UART_HANDLER, cmd, 9);
 }
 
-void Servo_Set_Angle_Group(uint8_t ServoID_1, float Angle_1, uint8_t ServoID_2, float Angle_2)
+void Servo_Stop(Servo servo)
 {
-    uint16_t PWM_1 = (uint16_t)(Angle_1 * (SERVO_PWM_MAX - SERVO_PWM_MIN) / (SERVO_ANGLE_MAX - SERVO_ANGLE_MIN) + SERVO_PWM_CENTER);
-    uint16_t PWM_2 = (uint16_t)(Angle_2 * (SERVO_PWM_MAX - SERVO_PWM_MIN) / (SERVO_ANGLE_MAX - SERVO_ANGLE_MIN) + SERVO_PWM_CENTER);
-    Servo_Set_PWM_Group(ServoID_1, PWM_1, ServoID_2, PWM_2);
-}
-
-void Servo_Get_Position(uint8_t ServoID)
-{
-    sprintf((char*)cmd, "#%03dPRAD!", ServoID);
+    sprintf((char*)cmd, "#%03dPDST!", servo.ID);
     HAL_UART_Transmit_IT(&SERVO_UART_HANDLER, cmd, 9);
 }
 
 uint16_t Get_PWM_From_Response(uint8_t *Response)
 {
     char number[4] = "";
-    memcpy(number, 5+(char *)Response, 4);
+    strncpy(number, 5+(char *)Response, 4);
 
     // 将字符串转换为整数
     uint16_t pwm = atoi(number);
